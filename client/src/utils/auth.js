@@ -1,11 +1,12 @@
 // use this to decode a token and get the user's information out of it
-import decode from 'jwt-decode';
+import decode from "jwt-decode";
 
 // create a new class to instantiate for a user
 class AuthService {
   // get user data
   getProfile() {
-    return decode(this.getToken());
+    const token = this.getToken;
+    return token;
   }
 
   // check if user's logged in
@@ -29,20 +30,36 @@ class AuthService {
 
   getToken() {
     // Retrieves the user token from localStorage
-    return localStorage.getItem('id_token');
+    return localStorage.getItem("id_token");
   }
 
-  login(idToken) {
+  login( {token, user} ) {
+    console.log({token, user})
+
     // Saves user token to localStorage
-    localStorage.setItem('id_token', idToken);
-    window.location.assign('/');
+    // localStorage.setItem("id_token", idToken);
+    localStorage.setItem("id_token", token);
+    user.savedBooks && localStorage.setItem("saved_books", JSON.stringify(user.savedBooks.map(element => element.bookId)));
+    // Returns to root url
+    window.location.assign("/");
   }
 
   logout() {
     // Clear user token and profile data from localStorage
-    localStorage.removeItem('id_token');
+    localStorage.removeItem("id_token");
+    // Clear saved books from local storage (if user signs in with a different id)
+    // When token expires this happens as well
+    localStorage.removeItem("saved_books");
     // this will reload the page and reset the state of the application
-    window.location.assign('/');
+    window.location.assign("/");
+  }
+
+  clearStorage() {
+    // Clear user token and profile data from localStorage
+    localStorage.removeItem("id_token");
+    // Clear saved books from local storage (if user signs in with a different id)
+    // When token expires this happens as well
+    localStorage.removeItem("saved_books");
   }
 }
 
